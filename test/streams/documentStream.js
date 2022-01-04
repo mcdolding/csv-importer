@@ -522,3 +522,69 @@ tape( 'documentStream rejects invalid popularity', function(test) {
     test.end();
   });
 });
+
+tape( 'document stream accepts unit', function(test) {
+  const input = {
+    NUMBER: '5',
+    STREET: '101st Avenue',
+    LAT: 5,
+    LON: 6,
+    postalcode: '10010',
+    popularity: '5000',
+    unit: 'Flat 3'
+  };
+  const stats = { badRecordCount: 0 };
+  const documentStream = DocumentStream.create('prefix', stats);
+
+  test_stream([input], documentStream, function(err, actual) {
+    test.equal(actual.length, 1, 'the document should be pushed' );
+    test.equal(stats.badRecordCount, 0, 'bad record count unchanged');
+    test.equal(actual[0].getAddress('unit'), 'Flat 3');
+    test.end();
+  });
+});
+
+tape( 'document stream accepts UNIT', function(test) {
+  const input = {
+    NUMBER: '5',
+    STREET: '101st Avenue',
+    LAT: 5,
+    LON: 6,
+    postalcode: '10010',
+    popularity: '5000',
+    UNIT: 'Flat 3'
+  };
+  const stats = { badRecordCount: 0 };
+  const documentStream = DocumentStream.create('prefix', stats);
+
+  test_stream([input], documentStream, function(err, actual) {
+    test.equal(actual.length, 1, 'the document should be pushed' );
+    test.equal(stats.badRecordCount, 0, 'bad record count unchanged');
+    test.equal(actual[0].getAddress('unit'), 'Flat 3');
+    test.end();
+  });
+});
+
+tape( 'document stream accepts unit over UNIT', function(test) {
+  const input = {
+    NUMBER: '5',
+    STREET: '101st Avenue',
+    LAT: 5,
+    LON: 6,
+    postalcode: '10010',
+    popularity: '5000',
+    unit: 'Flat 3',
+    UNIT: 'Flat 4'
+  };
+  const stats = { badRecordCount: 0 };
+  const documentStream = DocumentStream.create('prefix', stats);
+
+  test_stream([input], documentStream, function(err, actual) {
+    test.equal(actual.length, 1, 'the document should be pushed' );
+    test.equal(stats.badRecordCount, 0, 'bad record count unchanged');
+    test.equal(actual[0].getAddress('unit'), 'Flat 3');
+    test.end();
+  });
+});
+
+
