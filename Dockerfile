@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y unzip && rm -rf /var/lib/apt/lists/*
 ENV WORKDIR /code/pelias/csv-importer
 WORKDIR ${WORKDIR}
 
+RUN mkdir -p ${WORKDIR}
+
 # copy package.json first to prevent npm install being rerun when only code changes
 COPY ./package.json ${WORKDIR}
 RUN npm install
